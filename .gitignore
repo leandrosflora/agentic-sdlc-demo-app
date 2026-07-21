@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+.demo/
+.venv/
+*.py[cod]
+.pytest_cache/
+dist/
+*.egg-info/

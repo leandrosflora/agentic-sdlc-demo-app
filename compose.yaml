@@ -1,0 +1,9 @@
+services:
+  demo-app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      ARTIFACT_DIGEST: "${ARTIFACT_DIGEST:-development}"
+      DEMO_HEALTH_MODE: "${DEMO_HEALTH_MODE:-healthy}"
+    restart: unless-stopped

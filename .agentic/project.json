@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "project_id": "agentic-sdlc-demo-app",
+  "repository": "leandrosflora/agentic-sdlc-demo-app",
+  "default_branch": "master",
+  "runtime_repository": "leandrosflora/agentic-sdlc-runtime",
+  "language": "python",
+  "quality_gates": [
+    ["python", "-m", "pytest"],
+    ["python", "-m", "compileall", "-q", "src"]
+  ],
+  "release": {
+    "environment": "demo",
+    "deploy_command": ["python", "ops/deploy.py", "deploy"],
+    "rollback_command": ["python", "ops/deploy.py", "rollback"],
+    "health_url": "http://127.0.0.1:8000/health",
+    "artifact_identity": "ARTIFACT_DIGEST"
+  },
+  "agent_permissions": {
+    "developer": ["branch.create", "contents.write", "pull_request.create"],
+    "test": ["checks.write"],
+    "security": ["checks.write"],
+    "reviewer": ["pull_request.review"],
+    "release": ["environment.demo.deploy"]
+  }
+}
