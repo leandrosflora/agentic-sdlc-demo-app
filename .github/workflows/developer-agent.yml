@@ -1,0 +1,39 @@
+name: Developer Agent
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: developer-agent-issue-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  implement:
+    if: github.event.label.name == 'agentic-sdlc'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: leandrosflora/agentic-sdlc-runtime
+          ref: master
+          path: .agentic-runtime
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e .agentic-runtime
+      - name: Create guarded branch and draft PR
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          MODEL_API_KEY: ${{ secrets.MODEL_API_KEY }}
+          MODEL_BASE_URL: ${{ vars.MODEL_BASE_URL }}
+          MODEL_NAME: ${{ vars.MODEL_NAME }}
+        run: |
+          python .agentic-runtime/scripts/developer_action.py             --repository "${{ github.repository }}"             --issue "${{ github.event.issue.number }}"             --base master

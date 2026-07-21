@@ -91,6 +91,21 @@ Para uma integração entre repositórios, o job deve fazer checkout desta aplic
 - CI prova deploy, health check e rollback;
 - nenhum secret ou dado de produção.
 
+
+## Developer Agent automático
+
+Ao aplicar o label `agentic-sdlc` a uma Issue, o workflow `Developer Agent`:
+
+1. carrega o runtime oficial;
+2. usa o Model Gateway para propor arquivos estruturados;
+3. restringe mudanças a `src/`, `tests/` e `docs/`;
+4. cria uma branch `agent/issue-...`;
+5. abre um draft PR;
+6. comenta o link na Issue;
+7. nunca faz merge.
+
+Configure `MODEL_API_KEY` como secret e `MODEL_BASE_URL`/`MODEL_NAME` como variables. Em **Settings → Actions → General**, permita que GitHub Actions crie Pull Requests. Mantenha proteção de branch e revisão humana obrigatória.
+
 ## Primeiro experimento
 
 1. Após o merge, crie o label `agentic-sdlc`.
