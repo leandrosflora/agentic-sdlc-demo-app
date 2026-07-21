@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37411.7 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "agentic-sdlc-demo-app", "agentic-sdlc-demo-app.pyproj", "{730E7A56-9C25-4AA0-8051-C62AD7C71A68}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{730E7A56-9C25-4AA0-8051-C62AD7C71A68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{730E7A56-9C25-4AA0-8051-C62AD7C71A68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B9C16BB7-F066-4F3C-A5E5-B9FA72CAA5EC}
+	EndGlobalSection
+EndGlobal
