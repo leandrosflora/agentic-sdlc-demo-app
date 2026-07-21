@@ -1,0 +1,57 @@
+name: Unified Agentic SDLC release
+
+on:
+  pull_request:
+    branches: [master]
+    types: [closed]
+
+permissions:
+  contents: read
+  checks: write
+  issues: write
+  id-token: write
+
+jobs:
+  release-demo:
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'agent/issue-')
+    runs-on: ubuntu-latest
+    environment: demo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: leandrosflora/agentic-sdlc-runtime
+          ref: master
+          path: .agentic-runtime
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e .agentic-runtime
+      - id: issue
+        name: Resolve source Issue
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          python - <<'PY'
+          import os, re
+          body = os.environ.get("PR_BODY", "")
+          match = re.search(r"#(\d+)", body)
+          if not match:
+              raise SystemExit("PR body does not reference a source Issue")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"number={match.group(1)}\n")
+          PY
+      - name: Deploy, observe and rollback when required
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          P6_DEMO_FORCE_UNHEALTHY: ${{ vars.P6_DEMO_FORCE_UNHEALTHY }}
+        run: |
+          python .agentic-runtime/scripts/cross_repo_release.py             --repository "${{ github.repository }}"             --issue "${{ steps.issue.outputs.number }}"             --head-sha "${{ github.event.pull_request.merge_commit_sha }}"             --previous-sha "${{ github.event.pull_request.base.sha }}"             --approver "${{ github.actor }}"             --workspace .
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agentic-release-evidence-${{ github.event.pull_request.number }}-${{ github.run_id }}
+          path: .agentic-release
+          include-hidden-files: true
+          retention-days: 90

@@ -106,6 +106,24 @@ Ao aplicar o label `agentic-sdlc` a uma Issue, o workflow `Developer Agent`:
 
 Configure `MODEL_API_KEY` como secret e `MODEL_BASE_URL`/`MODEL_NAME` como variables. Em **Settings → Actions → General**, permita que GitHub Actions crie Pull Requests. Mantenha proteção de branch e revisão humana obrigatória.
 
+
+## Fluxo unificado após o merge
+
+Quando um draft PR criado pelo Developer Agent é revisado e mesclado:
+
+1. o workflow reconhece a branch `agent/issue-...`;
+2. recupera a Issue referenciada no corpo do PR;
+3. pausa no Environment `demo` para aprovação;
+4. rejeita o release se o aprovador registrado for o autor da Issue;
+5. calcula o digest pelo merge commit;
+6. estabelece o commit anterior como baseline;
+7. promove o candidato;
+8. observa `/health`;
+9. conclui ou executa rollback;
+10. publica Check, comentário e artifact de evidências.
+
+Para testar a recuperação, configure temporariamente a variable `P6_DEMO_FORCE_UNHEALTHY=true`. Remova-a depois do experimento.
+
 ## Primeiro experimento
 
 1. Após o merge, crie o label `agentic-sdlc`.
