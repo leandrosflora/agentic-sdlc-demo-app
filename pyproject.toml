@@ -1,0 +1,19 @@
+[project]
+name = "agentic-sdlc-demo-app"
+version = "0.1.0"
+description = "Minimal observable application used by the Agentic SDLC real integration"
+requires-python = ">=3.11"
+
+[project.scripts]
+agentic-demo-app = "demo_app.server:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
