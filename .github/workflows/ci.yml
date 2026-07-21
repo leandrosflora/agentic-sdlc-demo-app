@@ -28,7 +28,10 @@ jobs:
           ARTIFACT_DIGEST=sha256:stable python ops/deploy.py deploy
           python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health').read()"
           ARTIFACT_DIGEST=sha256:candidate P6_DEMO_FORCE_UNHEALTHY=true python ops/deploy.py deploy
-          python -c "import urllib.error, urllib.request; try: urllib.request.urlopen('http://127.0.0.1:8000/health'); raise SystemExit('expected 503') except urllib.error.HTTPError as e: assert e.code == 503"
+          if curl --fail --silent http://127.0.0.1:8000/health; then
+            echo "expected unhealthy candidate to return a non-2xx response"
+            exit 1
+          fi
           ARTIFACT_DIGEST=sha256:stable python ops/deploy.py rollback
           python -c "import json, urllib.request; d=json.load(urllib.request.urlopen('http://127.0.0.1:8000/health')); assert d['digest']=='sha256:stable'"
       - run: docker build -t agentic-sdlc-demo-app:${{ github.sha }} .
